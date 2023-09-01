@@ -176,6 +176,37 @@ M.show = vim.schedule_wrap(function(actions, should_confirm, cb)
   vim.keymap.set("n", "o", function()
     confirm()
   end, { buffer = bufnr })
+
+  -- simple confirmation, no need to show the preview
+  local prompt = ""
+  for i, action in ipairs(actions) do
+    local adapter = util.get_adapter_for_action(action)
+    local line
+    if action.type == "change" then
+      line = columns.render_change_action(adapter, action)
+    else
+      line = adapter.render_action(action)
+    end
+    prompt = prompt .. line
+
+    if i < #actions then
+      prompt = prompt .. "\n"
+    end
+  end
+
+  prompt = prompt .. "? Confirm [Y/n] "
+
+  vim.ui.input({
+    prompt = prompt,
+  }, function(input)
+      if input == "Y" then
+        confirm()
+      else
+        cancel()
+        print('Aborted')
+      end
+  end)
+
 end)
 
 return M

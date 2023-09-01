@@ -337,7 +337,7 @@ M.render_action = function(action)
   elseif action.type == "delete" then
     local _, path = util.parse_url(action.url)
     assert(path)
-    return string.format("DELETE %s", M.to_short_os_path(path, action.entry_type))
+    return string.format("Delete %s", M.to_short_os_path(path, action.entry_type))
   elseif action.type == "move" or action.type == "copy" then
     local dest_adapter = config.get_adapter_by_scheme(action.dest_url)
     if dest_adapter == M then
